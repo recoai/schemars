@@ -123,7 +123,7 @@ fn expr_for_enum(variants: &[Variant], cattrs: &serde_attr::Container) -> TokenS
 
     match cattrs.tag() {
         TagType::External => expr_for_external_tagged_enum(variants, deny_unknown_fields),
-        TagType::None => expr_for_untagged_enum(variants, deny_unknown_fields),
+        TagType::None => expr_for_external_tagged_enum(variants, deny_unknown_fields),
         TagType::Internal { tag } => {
             expr_for_internal_tagged_enum(variants, tag, deny_unknown_fields)
         }
