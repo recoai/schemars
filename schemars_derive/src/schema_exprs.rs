@@ -123,7 +123,7 @@ fn expr_for_enum(variants: &[Variant], cattrs: &serde_attr::Container) -> TokenS
 
     match cattrs.tag() {
         TagType::External => expr_for_external_tagged_enum(variants, deny_unknown_fields),
-        TagType::None => expr_for_external_tagged_enum(variants, deny_unknown_fields),
+        TagType::None => expr_for_untagged_enum(variants, deny_unknown_fields),
         TagType::Internal { tag } => {
             expr_for_internal_tagged_enum(variants, tag, deny_unknown_fields)
         }
@@ -137,8 +137,11 @@ fn expr_for_external_tagged_enum<'a>(
     variants: impl Iterator<Item = &'a Variant<'a>>,
     deny_unknown_fields: bool,
 ) -> TokenStream {
-    let (unit_variants, complex_variants): (Vec<_>, Vec<_>) =
-        variants.partition(|v| v.is_unit() && v.attrs.with.is_none());
+    // let (unit_variants, complex_variants): (Vec<_>, Vec<_>) =
+    //     variants.partition(|v| v.is_unit() && v.attrs.with.is_none());
+
+    let unit_variants: Vec<&Variant> = vec![];
+    let complex_variants : Vec<_> = variants.collect();
 
     let unit_names = unit_variants.iter().map(|v| v.name());
     let unit_schema = schema_object(quote! {
